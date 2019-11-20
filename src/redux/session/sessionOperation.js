@@ -10,39 +10,24 @@ import {
   signupError,
 } from './sessionActions';
 
-// credentials-полномочия
 export const login = data => dispatch => {
   dispatch(loginRequest());
-  axios
+  return axios
     .post('http://localhost:4000/login', data)
     .then(user => {
       dispatch(loginSuccess(user.data));
-      // console.log(user.data);
-      //Добавляем токен в локал сторедж
-      localStorage.setItem('token', JSON.stringify(user.accesstoken));
+      localStorage.setItem('token', JSON.stringify(user.data.accesstoken));
     })
-    .catch(error => console.log(error));
-  console.log('sffsf');
+    .catch(error => dispatch(loginError(error)));
 };
 
 export const signup = data => dispatch => {
   dispatch(signupRequest());
-  axios
+  return axios
     .post('http://localhost:4000/register', data)
     .then(response => {
-      //ИЗМЕНИТЬ
-
       dispatch(signupSuccess(response.data.user));
-      //Добавляем токен в локал сторедж
       localStorage.setItem('token', JSON.stringify(response.data.user.token));
     })
-    .catch(error => signupError(error));
-  console.log('sffsf');
+    .catch(error => dispatch(signupError(error)));
 };
-// export const addComment = (comment, id) => dispatch => {
-//     dispatch(addCommentStart());
-//     axios
-//       .post('https://bloggy-api.herokuapp.com/comments', comment)
-//       .then(() => dispatch(getComment(id)))
-//       .catch(error => dispatch(addCommentError(error)));
-//   };

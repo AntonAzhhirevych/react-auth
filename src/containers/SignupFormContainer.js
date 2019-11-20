@@ -5,14 +5,6 @@ import SignupForm from '../components/SignupForm/SignupForm';
 import { signup } from '../redux/session/sessionOperation';
 import { withRouter } from 'react-router-dom';
 
-//-----------------------
-
-//sendUser(user).then(()=> history.replase('/')))
-
-//для того чтобі перейти на Home
-
-//------------------------
-
 class SignupFormContainer extends Component {
   constructor() {
     super();
@@ -22,11 +14,7 @@ class SignupFormContainer extends Component {
   handleSubmit = e => {
     const { signupUser, history } = this.props;
     e.preventDefault();
-    signupUser({ ...this.state });
-    console.log('submit');
-    console.log(this.props);
-    console.log('history', history);
-    history.replace('/');
+    signupUser({ ...this.state }).then(() => history.replace('/'));
 
     this.reset();
   };

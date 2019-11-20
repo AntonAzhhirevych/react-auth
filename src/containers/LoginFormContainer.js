@@ -1,8 +1,10 @@
 /*eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import LoginForm from '../components/LoginForm/LoginForm';
 import { login } from '../redux/session/sessionOperation';
+import { authenticated } from '../redux/session/sessionSelectors';
 
 class LoginFormContainer extends Component {
   constructor() {
@@ -11,17 +13,15 @@ class LoginFormContainer extends Component {
   }
 
   handleSubmit = e => {
-    const { loginUser } = this.props;
+    const { loginUser, history } = this.props;
     e.preventDefault();
-    loginUser({ ...this.state });
-    console.log(this.state);
-    console.log('this.props', this.props);
-    console.log('LOGIN');
+    loginUser({ ...this.state }).then(() => history.replace('/'));
     this.reset();
   };
 
   handleChange = ({ target }) => {
     const { value, name } = target;
+
     this.setState({ [name]: value });
   };
 
@@ -42,11 +42,15 @@ class LoginFormContainer extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  auth: authenticated(state),
+});
+
 const mapDispatchToProps = {
   loginUser: login,
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
-)(LoginFormContainer);
+)(withRouter(LoginFormContainer));
